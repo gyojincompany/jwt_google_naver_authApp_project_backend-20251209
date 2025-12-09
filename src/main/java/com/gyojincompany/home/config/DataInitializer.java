@@ -27,7 +27,7 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         // Admin 계정이 없으면 생성
         if (!userRepository.existsByEmail("admin@example.com")) { //DB에 "admin@example.com" 이메일 가진 계정이 없다면, 관리자 계정 DB에 생성
-            User admin = User.builder()
+            User admin = User.builder() //user 객체 생성 후 아래 내용을 넣어 admin user로 DB에 저장 
                     .email("admin@example.com")
                     .password(passwordEncoder.encode("admin123"))
                     .name("Admin User")
@@ -40,7 +40,7 @@ public class DataInitializer implements CommandLineRunner {
         
         // 일반 User 계정이 없으면 생성
         if (!userRepository.existsByEmail("user@example.com")) {
-            User user = User.builder()
+            User user = User.builder() //user 객체 생성 후 아래 내용을 넣어 일반 user로 DB에 저장
                     .email("user@example.com")
                     .password(passwordEncoder.encode("user123"))
                     .name("Regular User")
