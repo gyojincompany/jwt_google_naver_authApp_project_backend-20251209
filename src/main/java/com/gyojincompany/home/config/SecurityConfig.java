@@ -46,12 +46,12 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) //SPA + JWT에서는 필요 없음 → 꺼버림
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/oauth2/**", "/login/oauth2/**").permitAll() //어떤 URL을 로그인 없이 열어줄지 설정                
-                .requestMatchers("/api/admin/**").hasRole("ADMIN") // api/admin 아래는 관리자로 로그인했을때만 접근 가능하게 설정
-                .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // USER 또는 ADMIN 둘 다 접근 가능
+                .requestMatchers("/api/auth/**", "/oauth2/**", "/login/oauth2/**").permitAll() //어떤 URL을 로그인 과정 없이 열어줄지 설정                
+                .requestMatchers("/api/admin/**").hasRole("ADMIN") // api/admin 하위 요청은 관리자로 로그인했을때만 접근 가능하게 설정
+                .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // api/user 하위 USER 또는 ADMIN 둘 다 접근 가능
                 .anyRequest().authenticated() //나머지 요청은 모두 로그인 해야지만 접근가능하게 설정
             )
-            .cors(cors -> {}) //중요! CORS 설정 활성화->아래의 CORS 설정을 사용한다는 설정
+            .cors(cors -> {}) //중요! CORS 설정 활성화->하단의 CORS 설정을 사용한다는 설정
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //세션 사용 안함 설정 (JWT 방식이니까)
                 //STATELESS->“서버가 로그인 정보를 세션에 저장하지 않는다” 는 뜻
@@ -77,9 +77,12 @@ public class SecurityConfig {
     }
     
     @Bean
-    public AuthenticationProvider authenticationProvider() { //일반 로그인(id와 비번 사용하는 로그인) 시
+    public AuthenticationProvider authenticationProvider() { //일반 로그인(id와 비번 사용하는 로그인) 시 인증 실행
+    	//AuthenticationProvider 타입의 객체를 생성하고 반환하는 메서드를 정의 -> 주석에 따라 일반 로그인 시 인증을 실행하는 역할
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(); 
+        //**DaoAuthenticationProvider**의 인스턴스를 생성 -> Provider는 데이터 접근 객체(DAO)를 통해 사용자 정보를 인증하는 표준 구현체
         authProvider.setUserDetailsService(userDetailsService); //DB에서 사용자 찾기
+        //DaoAuthenticationProvider가 사용자 정보를 DB 등에서 가져올 때 사용할 UserDetailsService 구현체를 설정
         authProvider.setPasswordEncoder(passwordEncoder()); //찾은 사용자의 비밀번호를 로그인할때 넣은 비밀번호와 암호화한 한 후 비교 
         return authProvider;
     }
