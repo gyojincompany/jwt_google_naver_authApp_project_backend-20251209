@@ -19,16 +19,16 @@ spring:
       client:
         registration:
           google:
-            client-id: 348023487230-keq2juhdghqp2211vik08jbc4i54ildq.apps.googleusercontent.com
-            client-secret: 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
+            client-id: 
+            client-secret: 
             scope:
               - email
               - profile
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             
           naver:
-            client-id: BcTrQXgoDhLINobILEzZ
-            client-secret: WQLm3RyZR8
+            client-id: 
+            client-secret: 
             scope:
               - name
               - email
