@@ -46,15 +46,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) //SPA + JWT에서는 필요 없음 → 꺼버림
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/oauth2/**", "/login/oauth2/**").permitAll() //어떤 URL을 로그인 없이 열어줄지 설정
-                .requestMatchers(
-                        "/swagger-ui.html",
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**",
-                        "/v3/api-docs.yaml",
-                        "/swagger-resources/**",
-                        "/webjars/**"
-                    ).permitAll()   // Swagger 공개!!
+                .requestMatchers("/api/auth/**", "/oauth2/**", "/login/oauth2/**").permitAll() //어떤 URL을 로그인 없이 열어줄지 설정                
                 .requestMatchers("/api/admin/**").hasRole("ADMIN") // api/admin 아래는 관리자로 로그인했을때만 접근 가능하게 설정
                 .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // USER 또는 ADMIN 둘 다 접근 가능
                 .anyRequest().authenticated() //나머지 요청은 모두 로그인 해야지만 접근가능하게 설정
