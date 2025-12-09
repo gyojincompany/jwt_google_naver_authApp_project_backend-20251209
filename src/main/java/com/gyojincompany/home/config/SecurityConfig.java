@@ -27,6 +27,9 @@ import com.gyojincompany.home.security.JwtAuthenticationFilter;
 import com.gyojincompany.home.security.oauth2.CustomOAuth2UserService;
 import com.gyojincompany.home.security.oauth2.OAuth2SuccessHandler;
 
+//결국 “백엔드 API에 누가 들어올 수 있나?”를 통제하는 문지기 역할을 하는 클래스가 SecurityConfig 임!
+//->백엔드 API에 대한 “로그인 방식(JWT/OAuth2)” + “권한(ADMIN/USER)“ + “CORS” + “필터(JWT)” 설정을 모두 적어놓은 문지기 설정 파일
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -41,9 +44,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.disable()) //SPA + JWT에서는 필요 없음 → 꺼버림
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/oauth2/**", "/login/oauth2/**").permitAll()
+                .requestMatchers("/api/auth/**", "/oauth2/**", "/login/oauth2/**").permitAll() //어떤 URL을 로그인 없이 열어줄지 설정
                 .requestMatchers(
                         "/swagger-ui.html",
                         "/swagger-ui/**",
@@ -52,36 +55,48 @@ public class SecurityConfig {
                         "/swagger-resources/**",
                         "/webjars/**"
                     ).permitAll()   // Swagger 공개!!
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
-                .anyRequest().authenticated()
+                .requestMatchers("/api/admin/**").hasRole("ADMIN") // api/admin 아래는 관리자로 로그인했을때만 접근 가능하게 설정
+                .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // USER 또는 ADMIN 둘 다 접근 가능
+                .anyRequest().authenticated() //나머지 요청은 모두 로그인 해야지만 접근가능하게 설정
             )
-            .cors(cors -> {})
+            .cors(cors -> {}) //중요! CORS 설정 활성화->아래의 CORS 설정을 사용한다는 설정
             .sessionManagement(session -> session
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //세션 사용 안함 설정 (JWT 방식이니까)
+                //STATELESS->“서버가 로그인 정보를 세션에 저장하지 않는다” 는 뜻
+                //즉, 서버가 사용자 정보를 기억하지 않음 → 매 요청마다 새로 인증해야 함 → 그래서 JWT 같은 토큰 방식이 필요함
+                //세션을 사용하지 않는 이유:
+                //전통적 방식 (SESSION)
+                //서버가 로그인 정보를 메모리에 저장 -> 서버가 “이 사용자는 로그인된 상태”라고 기억하고 있음 -> 서버 1대일 때는 문제 없지만 서버가 여러 대면 복잡해짐
+                //JWT 방식 (STATELESS)
+                //서버는 로그인 상태를 전혀 저장하지 않음 -> 사용자(브라우저)가 매 요청마다 JWT를 보내고 -> 서버는 JWT만 보고 인증 여부를 판단
+                //-> 모든 서버에서 같은 결과를 내기 때문에 확장에 유리함 -> 리액트 같은 프론트엔드와 스프링부트 백엔드를 분리하여 배포하는 경우 적용해야 함
             )
-            .oauth2Login(oauth2 -> oauth2
+            .oauth2Login(oauth2 -> oauth2 //구글 로그인 설정
                 .userInfoEndpoint(userInfo -> userInfo
                     .userService(customOAuth2UserService)
                 )
                 .successHandler(oAuth2SuccessHandler)
             )
             .authenticationProvider(authenticationProvider())
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class); 
+        	//“유저네임과 비밀번호 인증 필터보다 먼저 JWT 검사” -> 즉, 모든 요청에서 JWT부터 체크를 먼저한다는 설정
         
         return http.build();
     }
     
     @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder());
+    public AuthenticationProvider authenticationProvider() { //일반 로그인(id와 비번 사용하는 로그인) 시
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(); 
+        authProvider.setUserDetailsService(userDetailsService); //DB에서 사용자 찾기
+        authProvider.setPasswordEncoder(passwordEncoder()); //찾은 사용자의 비밀번호를 로그인할때 넣은 비밀번호와 암호화한 한 후 비교 
         return authProvider;
     }
     
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+    	//AuthenticationManager는 로그인 검사 기계의 역할임->스프링 시큐리티에서 아이디+비밀번호가 맞는지 검사하는 핵심 엔진
+		//인증 성공(아이디와 비번 일치) 시, 인증된 Authentication 객체를 반환함 
+		//Authentication 객체 내에 username, role(권한), 기타 UserDetails 정보가 들어 있음->컨트롤러에서 auth.getName() 하면 username 뺄 수 있음
         return config.getAuthenticationManager();
     }
     
