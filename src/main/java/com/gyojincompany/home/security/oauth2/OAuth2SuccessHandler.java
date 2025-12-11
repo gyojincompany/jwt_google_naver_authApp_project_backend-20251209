@@ -35,7 +35,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //refresh token도 함께 발급        
         
        //프론트엔드로 토큰 전달할 URL 만들기
-        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/oauth2/redirect") 
+//        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/oauth2/redirect")
+		String targetUrl = UriComponentsBuilder.fromUriString("http://http://my-s3-hosting-server.s3-website.ap-northeast-2.amazonaws.com/oauth2/redirect") 
                 .queryParam("token", token)
                 .queryParam("refreshToken", refreshToken)
                 .build().toUriString();        
