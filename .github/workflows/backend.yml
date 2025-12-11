@@ -12,37 +12,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
           java-version: '17'
+          distribution: 'temurin'
 
       - name: Grant execute permission for Gradle
         run: chmod +x ./gradlew
 
       - name: Build Spring Boot
-        run: ./gradlew clean build -x test
+        run: ./gradlew build -x test
 
-      - name: Ensure deployment directory exists on EC2
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ubuntu
-          key: ${{ secrets.EC2_KEY }}
-          script: |
-            mkdir -p /home/ubuntu/jwt_google_naver_authApp_project_backend-20251209
-
-      - name: Upload JAR to EC2
+      # 👉 JAR 파일을 EC2의 build/libs로 업로드
+      - name: Copy Jar to EC2
         uses: appleboy/scp-action@v0.1.5
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           source: "build/libs/*.jar"
-          target: "/home/ubuntu/jwt_google_naver_authApp_project_backend-20251209"
+          target: "/home/ubuntu/jwt_google_naver_authApp_project_backend-20251209/build/libs"
+          strip_components: 2
 
-      - name: Restart backend service on EC2
+      # 👉 서비스 재시작
+      - name: Restart backend service
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.EC2_HOST }}
