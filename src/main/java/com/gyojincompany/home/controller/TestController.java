@@ -8,7 +8,7 @@ public class TestController {
 	
 	@GetMapping("/test")
 	public String test() {
-		return "test OK!!";
+		return "test OK!!->무중단 배포 성공!!";
 	}
 			
 

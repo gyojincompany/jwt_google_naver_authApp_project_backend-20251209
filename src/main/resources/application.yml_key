@@ -1,10 +1,10 @@
 spring:
   datasource:
-    url: jdbc:mysql://${DB_HOST}/${DB_NAME}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://my-database-rds.cpu6w4us0jm6.ap-northeast-2.rds.amazonaws.com/auth_db?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: admin
+    password: lee123456
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+    
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,28 +13,29 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
-
+        
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
+            client-id: 348023487230-keq2juhdghqp2211vik08jbc4i54ildq.apps.googleusercontent.com
+            client-secret: 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
             scope:
               - email
               - profile
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-
+            
           naver:
-            client-id: ${NAVER_CLIENT_ID}
-            client-secret: ${NAVER_CLIENT_SECRET}
+            client-id: BcTrQXgoDhLINobILEzZ
+            client-secret: WQLm3RyZR8
             scope:
               - name
               - email
             client-name: Naver
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            
         provider:
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize
@@ -43,9 +44,9 @@ spring:
             user-name-attribute: response
 
 jwt:
-  secret: ${JWT_SECRET}
-  expiration: 86400000
-  refresh-expiration: 604800000
+  secret: your-secret-key-must-be-at-least-256-bits-long-for-HS256-algorithm
+  expiration: 86400000  # 1 day in milliseconds
+  refresh-expiration: 604800000  # 7 days in milliseconds
 
 server:
   port: 8888
