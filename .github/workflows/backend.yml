@@ -21,7 +21,7 @@ jobs:
         run: ./gradlew build -x test
 
       - name: Copy Jar to EC2
-        uses: appleboy/scp-action@v0.2.2
+        uses: appleboy/scp-action@v0.1.5
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
