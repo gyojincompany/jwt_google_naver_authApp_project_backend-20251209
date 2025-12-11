@@ -46,7 +46,7 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) //SPA + JWT에서는 필요 없음 → 꺼버림
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/auth/**", "/oauth2/**", "/login/oauth2/**", "/test").permitAll() //어떤 URL을 로그인 과정 없이 열어줄지 설정                
+                .requestMatchers("/api/auth/**", "/oauth2/**", "/login/oauth2/**","/test").permitAll() //어떤 URL을 로그인 과정 없이 열어줄지 설정                
                 .requestMatchers("/api/admin/**").hasRole("ADMIN") // api/admin 하위 요청은 관리자로 로그인했을때만 접근 가능하게 설정
                 .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN") // api/user 하위 USER 또는 ADMIN 둘 다 접근 가능
                 .anyRequest().authenticated() //나머지 요청은 모두 로그인 해야지만 접근가능하게 설정
