@@ -40,7 +40,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           source: "build/libs/*.jar"
-          target: "/home/ubuntu/jwt_google_naver_authApp_project_backend-20251209"
+          target: "/home/ubuntu/jwt_google_naver_authApp_project_backend-20251209/build/libs"
 
       - name: Restart backend service on EC2
         uses: appleboy/ssh-action@v1.0.0
