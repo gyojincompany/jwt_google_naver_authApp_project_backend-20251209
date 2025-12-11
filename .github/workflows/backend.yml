@@ -31,7 +31,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
-          source: "build/libs/*.jar"
+          source: "build/libs/jwt_test_project-20251209-0.0.1-SNAPSHOT.jar"
           target: "/home/ubuntu/jwt_google_naver_authApp_project_backend-20251209/build/libs"
           strip_components: 2
 
