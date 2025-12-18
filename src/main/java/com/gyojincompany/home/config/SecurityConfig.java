@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 
 import com.gyojincompany.home.security.JwtAuthenticationFilter;
 import com.gyojincompany.home.security.oauth2.CustomOAuth2UserService;
@@ -113,4 +114,9 @@ public class SecurityConfig {
 		return source;
 		//프론트 엔드, 모바일, 외부 서버 등 어디에서든 Spring API 요청할 수 있게 CORS 전부 열어둔 설정
 	}
+    
+    @Bean
+    public ForwardedHeaderFilter forwardedHeaderFilter() {
+        return new ForwardedHeaderFilter();
+    }
 }
