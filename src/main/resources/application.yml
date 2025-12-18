@@ -24,7 +24,7 @@ spring:
             scope:
               - email
               - profile
-            redirect-uri: "https://d34u094mtoqiq.cloudfront.net/login/oauth2/code/{registrationId}"
+            redirect-uri: "https://d34u094mtoqiq.cloudfront.net/login/oauth2/code/google"
 
           naver:
             client-id: ${NAVER_CLIENT_ID}
@@ -34,7 +34,7 @@ spring:
               - email
             client-name: Naver
             authorization-grant-type: authorization_code
-            redirect-uri: "https://d34u094mtoqiq.cloudfront.net/login/oauth2/code/{registrationId}"
+            redirect-uri: "https://d34u094mtoqiq.cloudfront.net/login/oauth2/code/naver"
         provider:
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize
