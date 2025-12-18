@@ -24,7 +24,7 @@ spring:
             scope:
               - email
               - profile
-            redirect-uri: "https://3.36.238.226.sslip.io/login/oauth2/code/{registrationId}"
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
 
           naver:
             client-id: ${NAVER_CLIENT_ID}
@@ -34,7 +34,7 @@ spring:
               - email
             client-name: Naver
             authorization-grant-type: authorization_code
-            redirect-uri: "https://3.36.238.226.sslip.io/login/oauth2/code/{registrationId}"
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
         provider:
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize
@@ -49,4 +49,4 @@ jwt:
 
 server:
   port: 8888
-  forward-headers-strategy: native
+#  forward-headers-strategy: native
