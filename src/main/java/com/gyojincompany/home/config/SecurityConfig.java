@@ -115,8 +115,8 @@ public class SecurityConfig {
 		//프론트 엔드, 모바일, 외부 서버 등 어디에서든 Spring API 요청할 수 있게 CORS 전부 열어둔 설정
 	}
     
-    @Bean
-    public ForwardedHeaderFilter forwardedHeaderFilter() {
-        return new ForwardedHeaderFilter();
-    }
+//    @Bean
+//    public ForwardedHeaderFilter forwardedHeaderFilter() {
+//        return new ForwardedHeaderFilter();
+//    }
 }
