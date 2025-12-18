@@ -37,7 +37,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
        //프론트엔드로 토큰 전달할 URL 만들기
 //        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/oauth2/redirect")
 //		String targetUrl = UriComponentsBuilder.fromUriString("http://my-s3-hosting-server.s3-website.ap-northeast-2.amazonaws.com/oauth2/redirect") 
-		String targetUrl = UriComponentsBuilder.fromUriString("https://d34u094mtoqiq.cloudfront.net/oauth2/redirect")
+		String targetUrl = UriComponentsBuilder.fromUriString("https://3.36.238.226.sslip.io/oauth2/redirect")
                 .queryParam("token", token)
                 .queryParam("refreshToken", refreshToken)
                 .build().toUriString();        
